@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html ng-app="SimulationApp">
+    <head>
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link href="resources/bootstrap-3.3.5-dist/css/bootstrap.css" rel="stylesheet">
+        <link href="resources/css/style.css" rel="stylesheet">
+    </head>
+    <body ng-controller="QueueController">
+        <div class="jumbotron container center-container rounded-container-20">
+            <div class="text-center collapser" data-toggle="collapse" data-target="#config-form" aria-expanded="false" onclick="toggleCollapseIcon()">
+                <h3>
+                    <span class="glyphicon glyphicon-cog glyphicon-left"></span>
+                    <strong>CONFIGURACIÓN</strong>
+                    <x class="pull-right">
+                        <span id="config-icon" class="glyphicon glyphicon-triangle-top"></span>
+                    </x>
+                </h3>
+            </div>
+            <form class="collapse in" id="config-form" ng-submit="simular()">
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <label>Número de Servidores</label>
+                        </td>
+                        <td>
+                            <input class="form-control text-right" ng-model="numOfServers" type="number" max="100" min="1" required/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px"><!--spacer--></tr>
+                    <tr>
+                        <td>
+                            <label>Tiempos de Llegada en Minutos</label>
+                        </td>
+                        <td>
+                            <input class="form-control text-right" ng-model="arriveTimes" required/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px"><!--spacer--></tr>
+                    <tr>
+                        <td>
+                            <label>Tiempo Promedio de Atención en Minutos</label>
+                        </td>
+                        <td>
+                            <input class="form-control text-right" ng-model="attentionTime" type="number" min="1" required/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px"><!--spacer--></tr>
+                    <tr>
+                        <td>
+                            <label>Velocidad de Simulación (0.01 + Rápida, 1 Normal, > 1 + Lenta)</label>
+                        </td>
+                        <td>
+                            <input class="form-control text-right" ng-model="queueFreq" required/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px"><!--spacer--></tr>
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <button type="submit" class="btn btn-lg btn-primary">Simular</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="container center-container">
+            <div class="row text-center">
+                <x id='clock'></x>
+            </div>
+            <div class="row">
+                <h4>
+                    <strong class="pull-left">
+                        Atenciones hoy: {{doneLength}}
+                    </strong>
+                    <strong class="pull-right tex-right">
+                        Clientes en cola: {{queue.length}}
+                    </strong>
+                </h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3 server-container" ng-repeat="server in servers">
+                <a class="btn btn-success btn-lg">
+                    <span class="glyphicon glyphicon-user"></span>
+                </a>
+                <br>{{server.nroMesa}}
+            </div>
+        </div>
+        <script src="resources/js/jquery.js"></script>
+        <script src="resources/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+        <script src="resources/js/angular.js"></script>
+        <script src="resources/js/queue.js"></script>
+        <script>
+            function toggleCollapseIcon(){
+                setTimeout(function () {
+                    var configForm = document.getElementById("config-form");
+                    
+                    if (!configForm) return;
+                    
+                    var classes = configForm.className;
+                    if (classes.indexOf(' in') < 0) {
+                        document.getElementById("config-icon").classList.remove('glyphicon-triangle-top');
+                        document.getElementById("config-icon").classList.add('glyphicon-triangle-bottom');
+                    }
+                    else{
+                        document.getElementById("config-icon").classList.remove('glyphicon-triangle-bottom');
+                        document.getElementById("config-icon").classList.add('glyphicon-triangle-top');
+                    }
+                }, 500)
+            }
+        </script>
+    </body>
+</html>

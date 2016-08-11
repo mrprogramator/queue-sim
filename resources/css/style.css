@@ -1,0 +1,39 @@
+body
+{
+    padding: 10px;
+}
+
+.center-container
+{
+    max-width:1000px;
+    margin: 10px auto;
+}
+
+.server-container
+{
+    text-align: center;
+    padding: 0px;
+    margin-top: 40px;
+}
+
+.collapser
+{
+    cursor: pointer;
+}
+
+.rounded-container-20
+{
+    border-radius: 20px;
+    padding-top: 5px;
+    padding-bottom: 20px;
+}
+
+.form-control-hor
+{
+    padding: 0px;
+}
+
+.glyphicon-left
+{
+    margin-right: 10px;
+}
