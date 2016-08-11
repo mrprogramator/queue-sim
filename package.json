@@ -3,7 +3,7 @@
     "description" : "N/A",
     "version" : "1.0.0",
     "private" : true,
-    "dependences" : {
+    "dependencies" : {
         "express" : "*"
     }
 }
