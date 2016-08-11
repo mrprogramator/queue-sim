@@ -23,7 +23,7 @@
                             <label>Número de Servidores</label>
                         </td>
                         <td>
-                            <input class="form-control text-right" ng-model="numOfServers" type="number" max="100" min="1" required/>
+                            <input ng-disabled="isSimulating" class="form-control text-right" ng-model="numOfServers" type="number" max="100" min="1" required/>
                         </td>
                     </tr>
                     <tr style="height:20px"><!--spacer--></tr>
@@ -32,7 +32,7 @@
                             <label>Tiempos de Llegada en Minutos</label>
                         </td>
                         <td>
-                            <input class="form-control text-right" ng-model="arriveTimes" required/>
+                            <input ng-disabled="isSimulating" class="form-control text-right" ng-model="arriveTimes" required/>
                         </td>
                     </tr>
                     <tr style="height:20px"><!--spacer--></tr>
@@ -41,7 +41,17 @@
                             <label>Tiempo Promedio de Atención en Minutos</label>
                         </td>
                         <td>
-                            <input class="form-control text-right" ng-model="attentionTime" type="number" min="1" required/>
+                            <input ng-disabled="isSimulating" class="form-control text-right" ng-model="attentionTime" type="number" min="1" required/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px"><!--spacer--></tr>
+                    <tr>
+                    <tr>
+                        <td>
+                            <label>Desviación Típica del Tiempo de Atención</label>
+                        </td>
+                        <td>
+                            <input ng-disabled="isSimulating" class="form-control text-right" ng-model="stDesv" required/>
                         </td>
                     </tr>
                     <tr style="height:20px"><!--spacer--></tr>
@@ -50,21 +60,26 @@
                             <label>Velocidad de Simulación (0.01 + Rápida, 1 Normal, > 1 + Lenta)</label>
                         </td>
                         <td>
-                            <input class="form-control text-right" ng-model="queueFreq" required/>
+                            <input ng-disabled="isSimulating" class="form-control text-right" ng-model="queueFreq" required/>
                         </td>
                     </tr>
                     <tr style="height:20px"><!--spacer--></tr>
                     <tr>
                         <td colspan="2" class="text-center">
-                            <button type="submit" class="btn btn-lg btn-primary">Simular</button>
+                            <button ng-show="!isSimulating" type="submit" class="btn btn-lg btn-primary">Simular</button>
+                            <a ng-show="isSimulating" class="btn btn-lg btn-danger" ng-click="stop()">Detener Simulación</a>
+                        </td>
+                        <td colspan="2" class="text-center">
+                            
                         </td>
                     </tr>
                 </table>
             </form>
         </div>
-        <div class="container center-container">
+        <div class="container center-container" >
             <div class="row text-center">
-                <x id='clock'></x>
+                <strong>Tiempo de simulación: </strong>
+                <br><x id='clock'></x>
             </div>
             <div class="row">
                 <h4>
@@ -77,10 +92,13 @@
                 </h4>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 server-container" ng-repeat="server in servers">
-                <a class="btn btn-success btn-lg">
-                    <span class="glyphicon glyphicon-user"></span>
+                <a class="btn btn-success btn-lg btn-server">
+                    <span class="badge served-count">{{server.served}}</span>
+                    <span class="glyphicon glyphicon-user glyphicon-server"></span>
+                    <span ng-if="server.nroTicket" class="glyphicon glyphicon-list-alt glyphicon-ticket"></span>
                 </a>
                 <br>{{server.nroMesa}}
+                <br>{{server.nroTicket}}
             </div>
         </div>
         <script src="resources/js/jquery.js"></script>
