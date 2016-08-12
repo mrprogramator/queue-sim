@@ -17,7 +17,7 @@
                 </h3>
             </div>
             <form class="collapse in" id="config-form" ng-submit="simular()">
-                <table style="width:100%">
+                <table>
                     <tr>
                         <td>
                             <label>Número de Servidores</label>
@@ -29,7 +29,7 @@
                     <tr style="height:20px"><!--spacer--></tr>
                     <tr>
                         <td>
-                            <label>Tiempos de Llegada en Minutos</label>
+                            <label>Tiempo Promedio entre Llegadas en Minutos</label>
                         </td>
                         <td>
                             <input ng-disabled="isSimulating" class="form-control text-right" ng-model="arriveTimes" required/>
@@ -56,25 +56,37 @@
                     </tr>
                     <tr style="height:20px"><!--spacer--></tr>
                     <tr>
+                        
                         <td>
-                            <label>Velocidad de Simulación (1 Normal, > 1 Rápida, < 1 Lenta)</label>
-                        </td>
-                        <td>
-                            <input ng-disabled="isSimulating" class="form-control text-right" ng-model="queueFreq" required/>
-                        </td>
-                    </tr>
-                    <tr style="height:20px"><!--spacer--></tr>
-                    <tr>
-                        <td colspan="2" class="text-center">
-                            <button ng-show="!isSimulating" type="submit" class="btn btn-lg btn-primary">Simular</button>
-                            <a ng-show="isSimulating" class="btn btn-lg btn-danger" ng-click="stop()">Detener Simulación</a>
-                        </td>
-                        <td colspan="2" class="text-center">
                             
                         </td>
                     </tr>
                 </table>
             </form>
+            <div>
+                <div>
+                    <div class="col-xs-7 progress-div">
+                        <label>Velocidad de Simulación</label>
+                    </div>
+                    <div class="col-xs-5 progress-div">
+                        <div class="col-xs-2 progress-div">
+                            <a id="dec" class="btn btn-default progress-btn" ng-mousedown="decreaseVel()"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                        </div>
+                        <div class="progress progress-div col-xs-8">
+                          <div id="pgbar" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="50"
+                          aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                          </div>
+                        </div>
+                        <div class="col-xs-2 progress-div">
+                            <a id="inc" class="btn btn-default progress-btn" ng-mousedown="increaseVel()" ><span class="glyphicon glyphicon-plus-sign"></span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a ng-show="!isSimulating" ng-click="simular()" class="btn btn-lg btn-primary">Simular</a>
+                    <a ng-show="isSimulating" class="btn btn-lg btn-danger" ng-click="stop()">Detener Simulación</a>
+                </div>
+            </div>
         </div>
         <div class="container center-container" >
             <div class="row text-center">
@@ -97,7 +109,7 @@
                 <a class="btn btn-success btn-lg btn-server">
                     <span class="badge served-count">{{server.served}}</span>
                     <span class="glyphicon glyphicon-user glyphicon-server"></span>
-                    <span ng-if="server.nroTicket" class="glyphicon glyphicon-list-alt glyphicon-ticket"></span>
+                    <span ng-if="server.ticket" class="glyphicon glyphicon-list-alt glyphicon-ticket"></span>
                 </a>
                 <br>{{server.nroMesa}}
                 <br><strong ng-if="server.ticket">ticket: </strong>{{server.ticket.nroTicket}}
@@ -107,6 +119,15 @@
                 <br>{{server.attTime}}
             </div>
         </div>
+         <div class="page-footer" >
+            <footer>
+              <p>Desarrollado por Luis Alberto Saucedo Quiroga</p>
+              <p><strong>Email:</strong>luisaucedoquiroga@gmail.com</p>
+              <p><strong>Tel:</strong>(+591) 78545415</p>
+              <p>Copyleft <span class="glyphicon glyphicon-copyright-mark"></span> Santa Cruz, Bolivia 2016</p>
+            </footer>
+            
+          </div>
         <script src="resources/js/jquery.js"></script>
         <script src="resources/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
         <script src="resources/js/angular.js"></script>

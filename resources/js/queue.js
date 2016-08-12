@@ -11,7 +11,7 @@ app.controller('QueueController', function ($scope, $timeout) {
     
     $scope.doneLength = 0;
     
-    $scope.queueFreq = 2000;
+    $scope.queueFreq = 3111;
     
     $scope.queue = [];
     
@@ -143,15 +143,38 @@ app.controller('QueueController', function ($scope, $timeout) {
             var yArray = [];
             
             $scope.tiemposDeEspera.forEach(function (te){
-                
-                var currentDate = new Date();
-                te.x.setYear(currentDate.getFullYear());
-                te.x.setMonth(currentDate.getMonth());
-                xArray.push(te.x);
-                yArray.push(te.y/1000);
+                xArray.push(pad(te.x.getHours(),2) + ":" + pad(te.x.getMinutes(),2));
+                yArray.push(te.y);
             })
             
-            plot(xArray, yArray);
+            var maxNumX = Math.max.apply(null,yArray);
+            
+            var divisor = 1000
+            
+            var xAxis = 'Tiempo de Simulación (HH:mm)'
+            
+            var yAxis = 'Espera en Segundos';
+            
+            var max = maxNumX/divisor;
+            
+            if (max > 60){
+                divisor*=60;
+                max = maxNumX/divisor;
+                yAxis = 'Espera en Minutos';
+                console.log(max);
+                if(max > 60){
+                    divisor*=60;
+                    max = maxNumX/divisor;
+                    yAxis = 'Espera en Horas';
+                }
+            }
+            
+            var newArray = [];
+            yArray.forEach(function(y) { 
+              newArray.push(y/divisor);
+            });
+            
+            plot(xArray, newArray,xAxis,yAxis);
             
             var fDate = getFormatedDate(new Date(tEspera));
             
@@ -211,7 +234,7 @@ app.controller('QueueController', function ($scope, $timeout) {
         
         $timeout(function (){
             call(server);
-        },5000/ $scope.queueFreq)
+        },30000/ $scope.queueFreq)
     }
     
     /*Helpers*/
@@ -280,21 +303,107 @@ app.controller('QueueController', function ($scope, $timeout) {
         }
     }
     
-    function plot(xArray, yArray){
+    function plot(xArray, yArray, xAxis, yAxis){
         var trace = {
             x: xArray,
             y: yArray,
-            mode: 'lines+markers'
+            mode: 'lines'
         }
         
         var data = [trace];
-        
         var layout = {
           title:'Tiempos de Espera',
           height: 400,
-          width: 600
+          xaxis: {
+            title: xAxis,
+            titlefont: {
+              family: 'Courier New, monospace',
+              size: 18,
+              color: '#7f7f7f'
+            }
+          },
+          yaxis: {
+            title: yAxis,
+            titlefont: {
+              family: 'Courier New, monospace',
+              size: 18,
+              color: '#7f7f7f'
+            }
+          }
         };
+        
+        if (window.innerWidth < 700){
+            layout.width = window.innerWidth;
+        }
+        else {
+            layout.width = window.innerWidth*0.8;
+        }
 
         Plotly.newPlot('graph', data, layout);
     }
+    
+    $scope.increaseVel = function (){
+        var pgbar = document.getElementById('pgbar');
+        var val = parseInt(pgbar.style.width.split("%")[0]);
+
+        if (val >= 100) return;
+        
+        var incVal = 10;
+        
+        if (val > 20) incVal = 100;
+        
+        if (val > 50) incVal = 500;
+        
+        if (val > 70) incVal = 1000;
+        
+        $scope.queueFreq += incVal;
+        
+        pgbar.style.width = val + 1 + '%'
+    }
+    
+    $scope.decreaseVel = function () {
+        var pgbar = document.getElementById('pgbar');
+        var val = parseInt(pgbar.style.width.split("%")[0]);
+        
+        if (val <= 0) return;
+        
+        if (val < 2) {
+            $scope.queueFreq = 1;
+            pgbar.style.width = '0%';
+            return;
+        };
+        
+        var decVal = 10;
+        
+        if (val > 20) decVal = 100;
+        
+        if (val > 50) decVal = 500;
+        
+        if (val > 70) decVal = 1000;
+        
+        $scope.queueFreq -= decVal;
+        
+        pgbar.style.width = parseInt(pgbar.style.width.split("%")[0]) - 1 + '%';
+        
+        if ($scope.queueFreq < 1){
+            $scope.queueFreq = 1;
+            pgbar.style.width = '0%';
+        }
+    }
+    
+    $("#inc").mousedown(function () {
+        loopthis = setInterval(function() {
+            $scope.increaseVel();
+        }, 100);
+    }).mouseup(function () {
+        clearInterval(loopthis);
+    });
+    
+    $("#dec").mousedown(function () {
+        loopthis = setInterval(function () {
+            $scope.decreaseVel();
+        }, 100);
+    }).mouseup(function () {
+        clearInterval(loopthis);
+    });
 });
