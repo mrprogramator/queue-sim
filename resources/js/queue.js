@@ -59,16 +59,20 @@ app.controller('QueueController', function ($scope, $timeout) {
         
         if ($scope.numOfServers > 100 || $scope.numOfServers < 1) return;
         
-        var size = $scope.numOfServers.toString().length;
-        
         $scope.servers = [];
         
-        for (var i=1; i <= $scope.numOfServers; ++i) {
-            $scope.servers.push({
-                nroMesa: "M" + pad(i, size),
-                served: 0
-            })
+        for (var i=0; i < $scope.numOfServers; ++i) {
+            $scope.addServer();
         }
+    }
+    
+    $scope.addServer = function() {
+        if(!$scope.servers) return;
+        
+        $scope.servers.push({
+            nroMesa: "M" + pad($scope.servers.length + 1, $scope.servers.length.toString().length),
+            served: 0
+        })
     }
     
     function setClock(){
@@ -143,7 +147,13 @@ app.controller('QueueController', function ($scope, $timeout) {
             var yArray = [];
             
             $scope.tiemposDeEspera.forEach(function (te){
-                xArray.push(pad(te.x.getHours(),2) + ":" + pad(te.x.getMinutes(),2));
+                var xLabel = pad(te.x.getHours(),2) + ":" + pad(te.x.getMinutes(),2) 
+                
+                if (te.x.getUTCDay()){
+                    xLabel =te.x.getUTCDay() + " " +  xLabel; 
+                }
+                
+                xArray.push(xLabel);
                 yArray.push(te.y);
             })
             

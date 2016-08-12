@@ -118,6 +118,12 @@
                 <br><strong ng-if="server.attTime">tiempo de atención: </strong>
                 <br>{{server.attTime}}
             </div>
+            <div class="col-xs-6 col-sm-4 col-md-3 server-container" ng-if="isSimulating">
+                <a class="btn btn-primary btn-lg" ng-click="addServer()">
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                </a>
+                <br>Agregar servidor
+            </div>
         </div>
          <div class="page-footer" >
             <footer>
