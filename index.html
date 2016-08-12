@@ -57,7 +57,7 @@
                     <tr style="height:20px"><!--spacer--></tr>
                     <tr>
                         <td>
-                            <label>Velocidad de Simulación (0.01 + Rápida, 1 Normal, > 1 + Lenta)</label>
+                            <label>Velocidad de Simulación (1 Normal, > 1 Rápida, < 1 Lenta)</label>
                         </td>
                         <td>
                             <input ng-disabled="isSimulating" class="form-control text-right" ng-model="queueFreq" required/>
@@ -80,11 +80,13 @@
             <div class="row text-center">
                 <strong>Tiempo de simulación: </strong>
                 <br><x id='clock'></x>
+                <br><strong ng-if="esperaAvgView">Tiempo Promedio de Espera: </strong>{{esperaAvgView}}
+                <br><div id="graph"></div>
             </div>
             <div class="row">
                 <h4>
                     <strong class="pull-left">
-                        Atenciones hoy: {{doneLength}}
+                        Atenciones hoy: {{atendidos.length}}
                     </strong>
                     <strong class="pull-right tex-right">
                         Clientes en cola: {{queue.length}}
@@ -98,13 +100,18 @@
                     <span ng-if="server.nroTicket" class="glyphicon glyphicon-list-alt glyphicon-ticket"></span>
                 </a>
                 <br>{{server.nroMesa}}
-                <br>{{server.nroTicket}}
+                <br><strong ng-if="server.ticket">ticket: </strong>{{server.ticket.nroTicket}}
+                <br><strong ng-if="server.ticket">esperó:</strong> 
+                <br>{{server.ticket.espera}}
+                <br><strong ng-if="server.attTime">tiempo de atención: </strong>
+                <br>{{server.attTime}}
             </div>
         </div>
         <script src="resources/js/jquery.js"></script>
         <script src="resources/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
         <script src="resources/js/angular.js"></script>
         <script src="resources/js/queue.js"></script>
+        <script type="text/javascript" src="resources/js/ploty.js"></script>
         <script>
             function toggleCollapseIcon(){
                 setTimeout(function () {
